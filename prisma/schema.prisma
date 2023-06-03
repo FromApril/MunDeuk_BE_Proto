@@ -2,44 +2,47 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
   extensions = [postgis]
 }
 
 model Member {
-  id BigInt @id @default(autoincrement())
+  id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt DateTime @updatedAt
 
-  email String @unique
+  email    String @unique
   nickname String
   password String
 
-  locker Locker?
-  notes Note[]
+  locker        Locker?
+  notes         Note[]
   notifications Notification[]
 }
 
 model Note {
-  id BigInt @id @default(autoincrement())
+  id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt DateTime @updatedAt
 
-  content String?
-  location Unsupported("point")
+  content   String?
+  latitude  Float
+  longitude Float
+  radius    Int
+
   isDeleted Boolean @default(false)
-  viewCount Int @default(0)
-  likeCount Int @default(0)
+  viewCount Int     @default(0)
+  likeCount Int     @default(0)
 
   writerId BigInt?
-  writer  Member? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  writer   Member? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   savedNotes SavedNote[]
 }
@@ -50,41 +53,42 @@ enum NotificationType {
 }
 
 model Notification {
-  id BigInt @id @default(autoincrement())
+  id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt DateTime @updatedAt
 
-  title String
-  detail String
-  noticeableId BigInt
-  notificationType NotificationType 
-  notificationDetail String @unique // 사용자 정의로 notification 진행
+  title              String
+  detail             String
+  noticeableId       BigInt
+  notificationType   NotificationType
+  notificationDetail String           @unique // 사용자 정의로 notification 진행
 
   notifiedMemberId BigInt?
-  notifiedMember Member? @relation(fields: [notifiedMemberId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  notifiedMember   Member? @relation(fields: [notifiedMemberId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 }
 
 model Locker {
-  id BigInt @id @default(autoincrement())
+  id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt DateTime @updatedAt
 
   ownerId BigInt @unique
-  owner Member @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  owner   Member @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  savedNotes SavedNote[]
+  viewedNoteIdList BigInt[]    @default([])
+  savedNotes       SavedNote[]
 }
 
 model SavedNote {
-  id BigInt @id @default(autoincrement())
+  id        BigInt   @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt DateTime @updatedAt
 
   lockerId BigInt
-  locker Locker @relation(fields: [lockerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  locker   Locker @relation(fields: [lockerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   noteId BigInt
-  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([lockerId, noteId])
 }
-
-
