@@ -22,17 +22,11 @@ class NoteDTO extends Noticeable implements Note {
   @Expose()
   likeCount: number;
 
-  @Expose()
-  latitude: number;
-
-  @Expose()
-  longitude: number;
-
-  @Expose()
-  radius: number;
-
   id: bigint;
   writerId: bigint;
+  latitude: number;
+  longitude: number;
+  radius: number;
 }
 
 export default NoteDTO;
