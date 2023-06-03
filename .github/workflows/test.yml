@@ -30,13 +30,20 @@ jobs:
           driver-opts: 'network=host'
 
       - name: 'Build docker-compose'
-        run: |-
+        run:
           echo 'DATABASE_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> ./prisma/.env.local
-          docker compose up -d
+          echo 'DIRECT_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> ./prisma/.env.local
+          docker compose -f ./docker/docker-compose.yml up -d
+
+      - name: 'Set up db env'
+        run: 
           pnpm prisma:generate:docker
           pnpm migrate:docker
 
       - name: 'Test'
-        run: |-
+        run:
           pnpm test:docker
-          docker compose down
+
+      - name: "Clean up docker"
+        run:
+          docker compose -f ./docker/docker-compose.yml down
