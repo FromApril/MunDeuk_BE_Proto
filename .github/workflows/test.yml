@@ -12,7 +12,14 @@ jobs:
 
       - uses: 'actions/setup-node@v3'
         with:
-          node-version: 'lts/gallium'
+          node-version: 18
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: true
 
       - name: 'Set up QEMU'
         uses: 'docker/setup-qemu-action@v2'
@@ -26,7 +33,6 @@ jobs:
         run: |-
           echo 'DATABASE_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> ./prisma/.env.local
           docker compose up -d
-          pnpm install
           pnpm prisma:generate:docker
           pnpm migrate:docker
 
