@@ -19,8 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:generate:docker": "dotenv -e ./prisma/.env.local -- yarn prisma:generate",
-    "migrate:docker": "dotenv -e ./prisma/.env.local -- npx prisma migrate deploy --schema ./prisma/schema.prisma",
+    "prisma:generate:docker": "dotenv -e ./prisma/.env.local -- pnpx prisma generate --schema ./prisma/schema.prisma",
+    "migrate:docker": "dotenv -e ./prisma/.env.local -- pnpx migrate deploy --schema ./prisma/schema.prisma",
     "test:docker": "dotenv -e ./prisma/.env.local -- jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
