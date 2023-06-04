@@ -31,8 +31,8 @@ jobs:
 
       - name: 'Build docker-compose'
         run:
-          echo 'DATABASE_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> ./prisma/.env.local
-          echo 'DIRECT_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> ./prisma/.env.local
+          echo 'DATABASE_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> .env
+          echo 'DIRECT_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> .env
           docker compose -f ./docker/docker-compose.yml up -d
 
       - name: 'Set up db env'

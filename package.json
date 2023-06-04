@@ -22,9 +22,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:generate:docker": "dotenv -e ./prisma/.env.local -- pnpx prisma generate",
-    "migrate:docker": "dotenv -e ./prisma/.env.local -- pnpx prisma migrate deploy",
-    "test:docker": "dotenv -e ./prisma/.env.local -- jest --config ./test/jest-e2e.json"
+    "prisma:generate:docker": "pnpx prisma generate",
+    "migrate:docker": "pnpx prisma migrate deploy",
+    "test:docker": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
