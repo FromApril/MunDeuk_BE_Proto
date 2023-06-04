@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { plainToInstance } from "class-transformer";
-import MemberDTO from "src/dtos/Member.dto";
+import MemberDTO from "../dtos/Member.dto";
 
 @Controller('member')
 class MemberController {
