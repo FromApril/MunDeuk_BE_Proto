@@ -8,7 +8,6 @@ import { RepositoryModule } from "src/repositories/repository.module";
 import { generateLocation } from "test/mocks/location.mock";
 import { generateMember } from "test/mocks/member.mock";
 import { generateNote } from "test/mocks/note.mock";
-import { getDistance } from "test/utils/math";
 
 describe("쪽지 스펙", () => {
   let prismaService: PrismaService;
