@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { Note } from '@prisma/client';
-import NoteDTO from "../dtos/Note.dto";
-import { PrismaService } from "../prisma/prisma.service";
+import NoteDTO from "src/dtos/Note.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 class NoteRepository {

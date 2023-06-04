@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
-import { PrismaService } from '../prisma/prisma.service';
-import MemberDTO from '../dtos/Member.dto';
-import LoginDTO from "../dtos/Login.dto";
+import { PrismaService } from 'src/prisma/prisma.service';
+import MemberDTO from 'src/dtos/Member.dto';
+import LoginDTO from "src/dtos/Login.dto";
 
 @Injectable()
 class MemberRepository {
