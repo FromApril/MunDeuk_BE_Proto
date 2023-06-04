@@ -7,8 +7,8 @@ class NoticeRepository {
   constructor(private prismaService: PrismaService) {}
 
   async publish({ listenerIdList, noticeableId, title, detail, notificationType, notificationDetail} : Pick<NoticeDTO, 'title'|'detail'|'notificationType'|'notificationDetail'> & {
-    listenerIdList: bigint[];
-    noticeableId: bigint;
+    listenerIdList: BigInt[];
+    noticeableId: BigInt;
   }): Promise<void> {
     await this.prismaService.notification.createMany({
       data: listenerIdList.map((notifiedMemberId) => ({

@@ -8,7 +8,7 @@ class MemberDTO implements Member {
   updatedAt: Date;
 
   @Expose()
-  id: bigint;
+  id: BigInt;
 
   @Expose()
   email: string;

@@ -17,12 +17,12 @@ class NoteRepository {
   }: { 
     latitude: number,
     longitude: number,
-    memberId?: number,
+    memberId?: BigInt,
     radius?: number,
     size?: number,
   }):Promise<NoteDTO[]> {
     return await this.prismaService.$transaction(async (tx) => {
-      let viewNoteIdList:bigint[] = [BigInt(0)];
+      let viewNoteIdList:BigInt[] = [BigInt(0)];
 
       if (memberId) {
         viewNoteIdList = await (await tx.locker.findUnique({ 

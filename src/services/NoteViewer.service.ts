@@ -43,8 +43,8 @@ class NoteViewerService {
     noteId,
     memberId,
   }: {
-    noteId: bigint;
-    memberId?: bigint;
+    noteId: BigInt;
+    memberId?: BigInt;
   }): Promise<NoteDTO> { 
     const note = await this.prismaService.note.findUniqueOrThrow({
       where: {
