@@ -5,11 +5,7 @@ import { Exclude, Expose } from 'class-transformer';
 class MemberDTO implements Member {
   id: bigint;
   password: string;
-
-  @Expose()
   createdAt: Date;
-
-  @Expose()
   updatedAt: Date;
 
   @Expose()

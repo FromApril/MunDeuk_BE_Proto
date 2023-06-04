@@ -1,6 +1,6 @@
 import { Note } from "@prisma/client";
 import { Exclude, Expose } from "class-transformer";
-import Noticeable from "src/interfaces/Noticeable.interface";
+import Noticeable from "../interfaces/Noticeable.interface";
 
 @Exclude()
 class NoteDTO extends Noticeable implements Note {

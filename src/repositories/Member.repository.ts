@@ -1,14 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
 import { plainToInstance } from "class-transformer";
-import LoginDTO from "src/dtos/Login.dto";
-import MemberDTO from "src/dtos/member.dto";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from '../prisma/prisma.service';
+import MemberDTO from '../dtos/Member.dto';
+import LoginDTO from "../dtos/Login.dto";
 
 @Injectable()
 class MemberRepository {
   constructor(private prismaService:PrismaService){}
-
 
   async findByNickname({nickname}:{nickname: string}): Promise<MemberDTO>{
     const foundMember = await this.prismaService.member.findFirst({
