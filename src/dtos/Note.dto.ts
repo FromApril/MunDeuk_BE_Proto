@@ -24,7 +24,9 @@ class NoteDTO extends Noticeable implements Note {
 
   id: bigint;
   writerId: bigint;
+  @Expose()
   latitude: number;
+  @Expose()
   longitude: number;
   radius: number;
 }

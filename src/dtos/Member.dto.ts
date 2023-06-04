@@ -3,10 +3,12 @@ import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
 class MemberDTO implements Member {
-  id: bigint;
   password: string;
   createdAt: Date;
   updatedAt: Date;
+
+  @Expose()
+  id: bigint;
 
   @Expose()
   email: string;

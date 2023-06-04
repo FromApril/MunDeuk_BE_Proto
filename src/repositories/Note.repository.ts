@@ -38,35 +38,39 @@ class NoteRepository {
     });
   }
 
-  async findNearNotesWithFilter({
+  async findNotesWithInDistance({
     memberId,
     latitude,
     longitude,
-    radius = 1,
-    size = 10
+    size = 10,
+    radius = 2,
   }: { 
-    memberId: number,
     latitude: number,
     longitude: number,
-    radius?: number, // killometers
+    memberId?: number,
+    radius?: number,
     size?: number,
   }):Promise<NoteDTO[]> {
-    const noteList = await this.prismaService.$transaction(async (tx) => {
-      const { viewedNoteIdList } = await tx.locker.findUnique({ 
-        where: { ownerId: memberId },
-        select: { 
-          viewedNoteIdList: true
-        }
-      });
+    return await this.prismaService.$transaction(async (tx) => {
+      let viewNoteIdList:bigint[] = [BigInt(0)];
 
-      return await tx.$queryRaw<Note[]>`SELECT * from "Note" n
-        where n.id not in (${viewedNoteIdList})
-          and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude})::geography, ${radius} * 1000)
+      if (memberId) {
+        viewNoteIdList = await (await tx.locker.findUnique({ 
+          where: { ownerId: memberId },
+          select: { 
+            viewedNoteIdList: true
+          }
+        })).viewedNoteIdList;
+      }
+
+      const noteList = await tx.$queryRaw<Note[]>`SELECT * from "Note"
+        where CAST(id as varchar) not in (${viewNoteIdList.map(x => x.toString()).join(', ')})
+          and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1000)
         limit ${size}
       `;
+
+      return noteList.map((note) => plainToInstance(NoteDTO, note));
     });
-    
-    return noteList.map((note) => plainToInstance(NoteDTO, note));
   }
 }
 
