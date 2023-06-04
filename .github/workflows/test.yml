@@ -35,13 +35,10 @@ jobs:
           echo 'DIRECT_URL="postgresql://prisma:prisma@localhost:5433/tests"' >> .env
           docker compose -f ./docker/docker-compose.yml up -d
 
-      - name: 'Set up db env'
+      - name: 'Test'
         run: 
           pnpm prisma:generate:docker
           pnpm migrate:docker
-
-      - name: 'Test'
-        run:
           pnpm test:docker
 
       - name: "Clean up docker"
