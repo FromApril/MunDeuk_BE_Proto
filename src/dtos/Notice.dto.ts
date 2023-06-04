@@ -21,9 +21,9 @@ class NoticeDTO implements Notification {
   @Expose()
   notificationDetail: string;
 
-  id: BigInt;
-  noticeableId: BigInt;
-  notifiedMemberId: BigInt;
+  id: bigint;
+  noticeableId: bigint;
+  notifiedMemberId: bigint;
 
   static createDTO({title, detail, notificationType, notificationDetail}: {
     title: string ;

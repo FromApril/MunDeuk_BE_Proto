@@ -8,7 +8,7 @@ class GetNoteDTO extends LocationDTO {
     "type": String,
   })
   @Type(() => BigInt)
-  memberId?: BigInt;
+  memberId?: bigint;
 }
 
 export default GetNoteDTO;

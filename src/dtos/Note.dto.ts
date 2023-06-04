@@ -45,9 +45,9 @@ class NoteDTO extends Noticeable implements Note {
   @Expose()
   longitude: number;
 
-  id: BigInt;
+  id: bigint;
   radius: number;
-  writerId: BigInt;
+  writerId: bigint;
 }
 
 export default NoteDTO;

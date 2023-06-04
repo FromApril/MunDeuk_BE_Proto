@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 
 export function generateNote(
   model: Partial<Prisma.NoteCreateManyInput> & { 
-    writerId: BigInt;
+    writerId: bigint;
   }
 ): Prisma.NoteCreateManyInput{
   return {

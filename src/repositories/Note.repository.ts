@@ -17,7 +17,7 @@ class NoteRepository {
   }: { 
     latitude: number,
     longitude: number,
-    memberId?: BigInt,
+    memberId?: bigint,
     radius?: number,
     size?: number,
   }):Promise<NoteDTO[]> {
