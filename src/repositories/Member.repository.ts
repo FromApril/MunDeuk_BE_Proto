@@ -38,6 +38,19 @@ class MemberRepository {
 
     return plainToInstance(MemberDTO, foundMember);
   }
+
+  async getLockerId(memberId: bigint) {
+    const { id: lockerId } = await this.prismaService.locker.findUniqueOrThrow({
+      where: {
+        ownerId: memberId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return { lockerId };
+  }
 }
 
 export default MemberRepository;

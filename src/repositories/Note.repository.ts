@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
-import { Note } from "@prisma/client";
+import { Note, Prisma } from "@prisma/client";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -54,6 +54,28 @@ class NoteRepository {
         isDeleted: true,
       },
     });
+  }
+
+  likeQuery(noteId: bigint): Prisma.NoteUpdateArgs {
+    return {
+      where: { id: noteId },
+      data: {
+        likeCount: {
+          increment: 1,
+        },
+      },
+    };
+  }
+
+  unlikeQuery(noteId: bigint): Prisma.NoteUpdateArgs {
+    return {
+      where: { id: noteId },
+      data: {
+        likeCount: {
+          decrement: 1,
+        },
+      },
+    };
   }
 }
 
