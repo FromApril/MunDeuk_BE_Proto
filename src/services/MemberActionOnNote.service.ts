@@ -26,7 +26,7 @@ class MemberActionOnNoteService {
 
     await this.prismaService.$transaction([
       this.prismaService.savedNote.upsert(
-        this.saveToLikedNote({
+        this.saveToLikedNoteQuery({
           lockerId,
           noteId,
           savedNoteState,
@@ -49,7 +49,9 @@ class MemberActionOnNoteService {
     });
   }
 
-  private saveToLikedNote({
+  // 숨기기
+
+  private saveToLikedNoteQuery({
     lockerId,
     noteId,
     savedNoteState,
@@ -75,7 +77,6 @@ class MemberActionOnNoteService {
       },
     };
   }
-  // 숨기기
 }
 
 export default MemberActionOnNoteService;
