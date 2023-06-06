@@ -4,7 +4,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 class NoticeRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async publish({ listenerIdList, noticeableId, title, detail, notificationType, notificationDetail} : Pick<NoticeDTO, 'title'|'detail'|'notificationType'|'notificationDetail'> & {
     listenerIdList: bigint[];

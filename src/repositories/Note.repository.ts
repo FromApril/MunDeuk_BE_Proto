@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 class NoteRepository {
-  constructor(private prismaService:PrismaService){}
+  constructor(private readonly prismaService:PrismaService){}
 
   async findNotesWithInDistance({
     latitude,

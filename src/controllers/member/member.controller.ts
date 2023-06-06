@@ -10,7 +10,7 @@ import { PostMemberDTO } from "./member.dtos";
 @Controller('member')
 class MemberController {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
   ) { }
 
   @Post('/')

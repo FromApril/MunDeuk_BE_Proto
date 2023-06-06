@@ -10,9 +10,9 @@ import { GetNoteDTO } from "./note.dots";
 @ApiTags('note')
 class NoteController {
   constructor(
-    private noteRepository: NoteRepository,
-    private noteViewerService: NoteViewerService,
-  ) {}
+    private readonly noteRepository: NoteRepository,
+    private readonly noteViewerService: NoteViewerService,
+  ) { }
 
   @Get()
   @ApiResponse({

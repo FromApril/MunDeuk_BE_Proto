@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 @Injectable()
 class NoteViewerService {
   constructor(
-    private prismaService: PrismaService
+    private readonly prismaService: PrismaService
   ) {}
 
   async save(noteDTO: NoteDTO): Promise<void> {

@@ -6,7 +6,7 @@ import LoginDTO from "src/dtos/Login.dto";
 
 @Injectable()
 class MemberRepository {
-  constructor(private prismaService:PrismaService){}
+  constructor(private readonly prismaService:PrismaService){}
 
   async findByNickname({nickname}:{nickname: string}): Promise<MemberDTO>{
     const foundMember = await this.prismaService.member.findFirst({

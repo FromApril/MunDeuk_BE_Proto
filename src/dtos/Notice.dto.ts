@@ -1,24 +1,43 @@
 import {Notification, NotificationType} from "@prisma/client"
+import { ApiProperty, ApiResponse, ApiResponseProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
 class NoticeDTO implements Notification {
   @Expose()
+  @ApiProperty({
+    type: Date,
+  })
   createdAt: Date;
 
   @Expose()
+  @ApiProperty({
+    type: Date,
+  })
   updatedAt: Date;
 
   @Expose()
+  @ApiProperty({
+    type: String,
+  })
   title: string;
 
   @Expose()
+  @ApiProperty({
+    type: String,
+  })
   detail: string;
 
   @Expose()
+  @ApiProperty({
+    type: NotificationType,
+  })
   notificationType: NotificationType;
 
   @Expose()
+  @ApiProperty({
+    type: String,
+  })
   notificationDetail: string;
 
   id: bigint;
