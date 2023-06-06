@@ -1,8 +1,6 @@
 FROM node:18-alpine as builder
 
 WORKDIR /app
-ARG app_folder_name
-ARG service_prefix=@search-nosearch
 
 RUN apk add --no-cache libc6-compat
 RUN apk update
@@ -24,8 +22,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 USER nestjs
 
-COPY --from=builder /node_modules node_modules
-COPY --from=builder /src .
+COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /app/dist .
 
 ENV TZ=Asia/Seoul
 ENV PORT=3000
