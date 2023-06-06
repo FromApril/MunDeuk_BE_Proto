@@ -51,7 +51,7 @@ jobs:
           context: '.'
           file: './docker/Dockerfile'
           push: 'true'
-          tags: 'asia-northeast3-docker.pkg.dev/fromapril/mundeuk_be_proto:latest'
+          tags: 'asia-northeast3-docker.pkg.dev/mundeuk/mundeuk-be-proto'
           cache-from: 'type=gha'
           cache-to: 'type=gha,mode=max'
         
