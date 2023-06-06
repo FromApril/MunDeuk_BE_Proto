@@ -2,48 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { GetNoteDetailDTO } from "src/controllers/note/note.dtos"
 
 @Injectable()
 class NoteViewerService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async save(noteDTO: NoteDTO): Promise<void> {
-    const { writerId, id, ...note } = noteDTO;
-
-    await this.prismaService.$transaction(async (tx) => {
-      const upsertedNote = await tx.note.upsert({
-        where: {
-          id,
-        },
-        update: note,
-        create: {
-          ...note,
-          writerId,
-        },
-      });
-
-      if (!noteDTO.isChecked) {
-        return;
-      }
-
-      await tx.locker.update({
-        where: { ownerId: writerId },
-        data: {
-          viewedNoteIdList: {
-            push: upsertedNote.id,
-          },
-        },
-      });
-    });
-  }
-
   async detail({
     noteId,
     memberId,
-  }: {
-    noteId: bigint;
-    memberId?: bigint;
-  }): Promise<NoteDTO> {
+  }: GetNoteDetailDTO): Promise<NoteDTO> {
     const note = await this.prismaService.note.findUniqueOrThrow({
       where: {
         id: noteId,
