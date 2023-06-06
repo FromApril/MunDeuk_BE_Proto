@@ -31,7 +31,7 @@ jobs:
       - name: 'Use gcloud CLI'
         run: |- 
           gcloud info
-          gcloud auth configure0docker asia-doker.pkg.dev
+          gcloud auth configure-docker asia-doker.pkg.dev
 
           - name: 'Set up Docker Buildx'
           uses: 'docker/setup-buildx-action@v2'
