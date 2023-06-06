@@ -1,9 +1,11 @@
-import { NestFactory } from "@nestjs/core";
+import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { PrismaService } from "./prisma/prisma.service";
 import { ValidationPipe } from "@nestjs/common";
 import helmet from "helmet";
+import { DefaultExceptionFilter } from "./exception/exception.filter";
+import { ResponseInterceptor } from "./response/response.interceptor";
 
 declare global {
   interface BigInt {
@@ -18,8 +20,12 @@ BigInt.prototype.toJSON = function () {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(helmet());
+  const httpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new DefaultExceptionFilter(httpAdapterHost));
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  app.use(helmet());
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
