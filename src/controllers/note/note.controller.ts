@@ -7,6 +7,7 @@ import {
   Query,
   Param,
   Delete,
+  Patch,
 } from "@nestjs/common";
 import LocationDTO from "src/dtos/Location.dto";
 import NoteDTO from "src/dtos/Note.dto";
@@ -21,6 +22,11 @@ import {
   DeleteNoteDTO,
 } from "./note.dtos";
 import { plainToInstance } from "class-transformer";
+import LikeNoteDTO from "src/dtos/LikeNote.dto";
+import MemberActionOnNoteService from "../../services/MemberActionOnNote.service";
+import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
+import LockerService from "src/services/Locker.service";
+import RethrowDTO from "src/dtos/Rethrow.dto";
 
 @Controller("note")
 @ApiTags("note")
@@ -29,6 +35,8 @@ class NoteController {
     private readonly noteRepository: NoteRepository,
     private readonly noteViewerService: NoteViewerService,
     private readonly noteEditorService: NoteEditorService,
+    private readonly lockerService: LockerService,
+    private readonly memberActionOnNoteService: MemberActionOnNoteService,
   ) {}
 
   @Get()
@@ -61,9 +69,31 @@ class NoteController {
     await this.noteRepository.save(noteDTO);
   }
 
+  @Post("like")
+  async likeNote(@Body() likeNote: LikeNoteDTO): Promise<void> {
+    await this.memberActionOnNoteService.like(likeNote);
+  }
+
+  @Post("throw")
+  async rethrowNote(@Body() rethrowDTO: RethrowDTO): Promise<void> {
+    await this.lockerService.rethrow(rethrowDTO);
+  }
+
   @Put()
   async replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
     await this.noteRepository.save(noteDTO);
+  }
+
+  @Patch("subscribe")
+  async subscribeNote(@Body() noteIdentifyDTO: NoteIdentityDTO): Promise<void> {
+    await this.lockerService.subscribe(noteIdentifyDTO);
+  }
+
+  @Patch("unsubscribe")
+  async unsubscribeNote(
+    @Body() noteIdentifyDTO: NoteIdentityDTO,
+  ): Promise<void> {
+    await this.lockerService.unsubscribe(noteIdentifyDTO);
   }
 
   @Delete()
