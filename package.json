@@ -26,6 +26,7 @@
     "prisma:m": "prisma migrate dev",
     "prisma:f": "prisma format",
     "prisma:gen": "prisma generate",
+    "prisma:md": "prisma migrate deploy",
     "prisma:generate:docker": "pnpx prisma generate",
     "migrate:docker": "pnpx prisma migrate deploy",
     "test:docker": "jest --config ./test/jest-e2e.json"
