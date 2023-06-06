@@ -1,7 +1,7 @@
 import LikeNoteDTO from "src/dtos/LikeNote.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { Prisma, SavedNoteState } from "@prisma/client";
-import MemberRepository from "../../dist/repositories/Member.repository";
+import MemberRepository from "src/repositories/Member.repository";
 import NoteRepository from "src/repositories/Note.repository";
 import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
 import SavedNoteRepository from "src/repositories/SavedNote.repository";

@@ -31,7 +31,7 @@
     "test:docker": "jest --config ./test/jest-e2e.json"
   },
   "lint-staged": {
-    "*": "rome format --write",
+    "*.ts": "rome format --write",
     "{src,test}": "rome check --apply"
   },
   "dependencies": {

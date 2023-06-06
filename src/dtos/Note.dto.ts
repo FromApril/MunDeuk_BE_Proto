@@ -56,6 +56,8 @@ class NoteDTO extends Noticeable implements Note {
   id: bigint;
   radius: number;
   writerId: bigint;
+  ownerId: bigint;
+  originId: bigint;
 }
 
 export default NoteDTO;
