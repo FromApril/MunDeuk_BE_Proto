@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import LocationDTO from "./Location.dto";
 import { Type } from "class-transformer";
+import LocationDTO from "../../dtos/Location.dto";
 
-class GetNoteDTO extends LocationDTO {
+export class GetNoteDTO extends LocationDTO {
   @ApiPropertyOptional({
     "description": "조회하는 맴버의 이름",
     "type": String,
@@ -11,4 +11,3 @@ class GetNoteDTO extends LocationDTO {
   memberId?: bigint;
 }
 
-export default GetNoteDTO;

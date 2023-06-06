@@ -9,9 +9,9 @@ class NoteRepository {
   constructor(private prismaService:PrismaService){}
 
   async findNotesWithInDistance({
-    memberId,
     latitude,
     longitude,
+    memberId,
     size = 10,
     radius = 2,
   }: { 
@@ -25,7 +25,7 @@ class NoteRepository {
       let viewNoteIdList:BigInt[] = [BigInt(0)];
 
       if (memberId) {
-        viewNoteIdList = await (await tx.locker.findUnique({ 
+        viewNoteIdList = (await tx.locker.findUnique({ 
           where: { ownerId: memberId },
           select: { 
             viewedNoteIdList: true

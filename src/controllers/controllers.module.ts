@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import MemberController from './member.controller';
 import { RepositoryModule } from 'src/repositories/repository.module';
-import NoteController from './note.controller';
 import { ServiceModule } from 'src/services/service.module';
+import MemberController from './member/member.controller';
+import NoteController from './note/note.controller';
 
 @Module({
   imports: [
@@ -10,7 +10,7 @@ import { ServiceModule } from 'src/services/service.module';
     ServiceModule,
   ],
   controllers: [
-    MemberController, 
+    MemberController,
     NoteController,
   ]
 })

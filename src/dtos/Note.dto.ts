@@ -5,44 +5,52 @@ import Noticeable from "src/interfaces/Noticeable.interface";
 
 @Exclude()
 class NoteDTO extends Noticeable implements Note {
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Date,
+  })
   createdAt: Date;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Date,
+  })
   updatedAt: Date;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: String,
+  })
   content: string;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Boolean,
+  })
   isDeleted: boolean;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Number,
+  })
   viewCount: number;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Number,
+  })
   likeCount: number;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Number,
+  })
   latitude: number;
 
-  @ApiResponseProperty({
-  })
   @Expose()
+  @ApiProperty({
+    type: Number,
+  })
   longitude: number;
 
   id: bigint;

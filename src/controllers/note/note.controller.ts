@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
-import GetNoteDTO from "src/dtos/GetNote.dto";
 import LocationDTO from "src/dtos/Location.dto";
 import NoteDTO from "src/dtos/Note.dto";
 import NoteRepository from "src/repositories/Note.repository";
 import NoteViewerService from "src/services/NoteViewer.service";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GetNoteDTO } from "./note.dots";
 
 @Controller('note')
 @ApiTags('note')
@@ -15,8 +15,14 @@ class NoteController {
   ) {}
 
   @Get()
+  @ApiResponse({
+    type: NoteDTO,
+    isArray: true,
+  })
   getNote(@Query() getNote: GetNoteDTO): Promise<NoteDTO[]> {
-    return this.noteRepository.findNotesWithInDistance(getNote)
+    return this.noteRepository.findNotesWithInDistance({
+      ...getNote,
+    });
   }
 
   @Post()
