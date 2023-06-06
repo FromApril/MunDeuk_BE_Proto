@@ -79,6 +79,11 @@ class NoteController {
     await this.lockerService.rethrow(rethrowDTO);
   }
 
+  @Post("report")
+  async reportNote(@Body() noteIdentityDTO: NoteIdentityDTO): Promise<void> {
+    await this.memberActionOnNoteService.report(noteIdentityDTO);
+  }
+
   @Put()
   async replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
     await this.noteRepository.save(noteDTO);
