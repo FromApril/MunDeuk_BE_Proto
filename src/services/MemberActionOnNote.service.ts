@@ -3,6 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Prisma, SavedNoteState } from "@prisma/client";
 import MemberRepository from "../../dist/repositories/Member.repository";
 import NoteRepository from "src/repositories/Note.repository";
+import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
 
 class MemberActionOnNoteService {
   constructor(
@@ -10,6 +11,7 @@ class MemberActionOnNoteService {
     private readonly memberRepository: MemberRepository,
     private readonly noteRepository: NoteRepository,
   ) {}
+
   // 좋아요
   async like({ memberId, noteId, like }: LikeNoteDTO) {
     const { lockerId } = await this.memberRepository.getLockerId(memberId);
@@ -32,6 +34,19 @@ class MemberActionOnNoteService {
       ),
       this.prismaService.note.update(updateLikeCountQuery),
     ]);
+  }
+
+  // 신고
+  async report({ memberId, noteId }: NoteIdentityDTO) {
+    const { lockerId } = await this.memberRepository.getLockerId(memberId);
+
+    this.prismaService.savedNote.create({
+      data: {
+        lockerId,
+        noteId,
+        status: SavedNoteState.REPORTED,
+      },
+    });
   }
 
   private saveToLikedNote({
@@ -60,7 +75,6 @@ class MemberActionOnNoteService {
       },
     };
   }
-  // 신고
   // 숨기기
 }
 

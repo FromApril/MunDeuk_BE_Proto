@@ -84,6 +84,7 @@ enum SavedNoteState {
   SUBSCRIBE
   UN_LIKE
   UN_SUBSCRIBE
+  REPORTED
 }
 
 model SavedNote {

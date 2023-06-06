@@ -1,6 +1,6 @@
-class LikeNoteDTO {
-  memberId: bigint;
-  noteId: bigint;
+import NoteIdentityDTO from "./NoteIdentity.dto";
+
+class LikeNoteDTO extends NoteIdentityDTO {
   like: boolean;
 }
 
