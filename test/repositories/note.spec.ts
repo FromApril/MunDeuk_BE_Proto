@@ -16,7 +16,6 @@ describe("쪽지 스펙", () => {
   let notes: Note[];
 
   beforeAll(async () => {
-
     const module: TestingModule = await Test.createTestingModule({
       imports: [RepositoryModule, PrismaModule],
     }).compile();
@@ -29,19 +28,21 @@ describe("쪽지 스펙", () => {
     });
 
     await prismaService.note.createMany({
-      data: Array.from({length: 10}).map(() => generateNote({writerId: member.id})),
+      data: Array.from({ length: 10 }).map(() =>
+        generateNote({ writerId: member.id }),
+      ),
     });
 
     notes = await prismaService.note.findMany({
       where: {
         writerId: member.id,
-      }
+      },
     });
-  })
+  });
 
   it("거리 내 조회가 가능합니다.", async () => {
     const location = generateLocation();
-    const searchSize = 4; 
+    const searchSize = 4;
     const radius = 1;
     const noteDTOList = await noteRepository.findNotesWithInDistance({
       ...location,
@@ -50,16 +51,17 @@ describe("쪽지 스펙", () => {
     });
 
     expect(noteDTOList.length).toBe(searchSize);
-    expect(noteDTOList.every((note) => {
-      return getDistance(note, location) < radius * 1000;
-    }));
-
+    expect(
+      noteDTOList.every((note) => {
+        return getDistance(note, location) < radius * 1000;
+      }),
+    );
   });
 });
 
-function getDistance(from:LocationDTO, to: LocationDTO): number {
+function getDistance(from: LocationDTO, to: LocationDTO): number {
   return Math.sqrt(
-    Math.pow((from.longitude - to.longitude), 2)
-    + Math.pow((from.latitude - to.latitude), 2)
+    Math.pow(from.longitude - to.longitude, 2) +
+      Math.pow(from.latitude - to.latitude, 2),
   );
 }

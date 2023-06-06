@@ -5,17 +5,15 @@ import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 class NoteViewerService {
-  constructor(
-    private readonly prismaService: PrismaService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async save(noteDTO: NoteDTO): Promise<void> {
-    const {writerId, id, ...note} = noteDTO;
+    const { writerId, id, ...note } = noteDTO;
 
     await this.prismaService.$transaction(async (tx) => {
       const upsertedNote = await tx.note.upsert({
         where: {
-          id
+          id,
         },
         update: note,
         create: {
@@ -28,13 +26,13 @@ class NoteViewerService {
         return;
       }
 
-      await tx.locker.update({ 
+      await tx.locker.update({
         where: { ownerId: writerId },
-        data: { 
-          viewedNoteIdList: { 
+        data: {
+          viewedNoteIdList: {
             push: upsertedNote.id,
-          }
-        }
+          },
+        },
       });
     });
   }
@@ -45,11 +43,11 @@ class NoteViewerService {
   }: {
     noteId: bigint;
     memberId?: bigint;
-  }): Promise<NoteDTO> { 
+  }): Promise<NoteDTO> {
     const note = await this.prismaService.note.findUniqueOrThrow({
       where: {
         id: noteId,
-      }
+      },
     });
 
     if (memberId) {
@@ -60,9 +58,9 @@ class NoteViewerService {
         data: {
           viewedNoteIdList: {
             push: note.id,
-          }
-        }
-      })
+          },
+        },
+      });
     }
 
     return plainToInstance(NoteDTO, note);

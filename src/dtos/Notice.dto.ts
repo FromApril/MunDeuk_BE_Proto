@@ -1,4 +1,4 @@
-import {Notification, NotificationType} from "@prisma/client"
+import { Notification, NotificationType } from "@prisma/client";
 import { ApiProperty, ApiResponse, ApiResponseProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
@@ -44,11 +44,16 @@ class NoticeDTO implements Notification {
   noticeableId: bigint;
   notifiedMemberId: bigint;
 
-  static createDTO({title, detail, notificationType, notificationDetail}: {
-    title: string ;
+  static createDTO({
+    title,
+    detail,
+    notificationType,
+    notificationDetail,
+  }: {
+    title: string;
     detail: string;
     notificationType: NotificationType;
-    notificationDetail:string
+    notificationDetail: string;
   }) {
     const notice = new NoticeDTO();
     notice.title = title;

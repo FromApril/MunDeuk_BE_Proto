@@ -6,7 +6,17 @@ import { PrismaService } from "src/prisma/prisma.service";
 class NoticeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async publish({ listenerIdList, noticeableId, title, detail, notificationType, notificationDetail} : Pick<NoticeDTO, 'title'|'detail'|'notificationType'|'notificationDetail'> & {
+  async publish({
+    listenerIdList,
+    noticeableId,
+    title,
+    detail,
+    notificationType,
+    notificationDetail,
+  }: Pick<
+    NoticeDTO,
+    "title" | "detail" | "notificationType" | "notificationDetail"
+  > & {
     listenerIdList: bigint[];
     noticeableId: bigint;
   }): Promise<void> {
@@ -18,7 +28,7 @@ class NoticeRepository {
         notificationType,
         notifiedMemberId,
         notificationDetail,
-      }))
+      })),
     });
   }
 }

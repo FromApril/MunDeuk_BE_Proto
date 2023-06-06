@@ -1,7 +1,6 @@
 import { Member } from "@prisma/client";
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
-
 
 @Exclude()
 class MemberDTO implements Member {
@@ -29,4 +28,3 @@ class MemberDTO implements Member {
 }
 
 export default MemberDTO;
-

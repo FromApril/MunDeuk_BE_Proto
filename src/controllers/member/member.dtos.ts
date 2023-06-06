@@ -16,4 +16,3 @@ export class PostMemberDTO {
   })
   password: string;
 }
-

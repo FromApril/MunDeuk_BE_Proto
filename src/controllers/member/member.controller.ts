@@ -7,13 +7,11 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { PostMemberDTO } from "./member.dtos";
 
 @ApiTags("member")
-@Controller('member')
+@Controller("member")
 class MemberController {
-  constructor(
-    private readonly prismaService: PrismaService,
-  ) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
-  @Post('/')
+  @Post("/")
   @ApiResponse({
     type: MemberDTO,
   })
@@ -22,10 +20,9 @@ class MemberController {
       data: {
         ...createDTO,
         locker: {
-          create: {
-          }
-        }
-      }
+          create: {},
+        },
+      },
     });
 
     return plainToInstance(MemberDTO, member);
