@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { PrismaService } from "./prisma/prisma.service";
+import { ValidationPipe } from "@nestjs/common";
+import helmet from "helmet";
 
 declare global {
   interface BigInt {
@@ -16,6 +18,9 @@ BigInt.prototype.toJSON = function () {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(helmet());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
@@ -25,6 +30,7 @@ async function bootstrap() {
     .setVersion("1.0")
     .addTag("Mundeuk")
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
 
