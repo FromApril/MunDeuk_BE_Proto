@@ -4,7 +4,7 @@ import LocationDTO from "../../dtos/Location.dto";
 
 export class GetNoteDTO extends LocationDTO {
   @ApiPropertyOptional({
-    "description": "조회하는 맴버의 이름",
+    "description": "조회하는 맴버의 아이디",
     "type": String,
   })
   @Type(() => BigInt)
