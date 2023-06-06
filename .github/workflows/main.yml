@@ -31,7 +31,7 @@ jobs:
       - name: 'Use gcloud CLI'
         run: |- 
           gcloud info
-          gcloud auth configure-docker asia.gcr.io/mundeuk
+          gcloud auth configure-docker asia.gcr.io
 
           - name: 'Set up Docker Buildx'
           uses: 'docker/setup-buildx-action@v2'
