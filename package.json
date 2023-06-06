@@ -9,6 +9,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "prepare": "husky install",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "rome format --write ./src/**/*.ts ./test/**/*.ts",
