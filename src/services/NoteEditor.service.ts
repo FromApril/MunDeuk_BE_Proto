@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
+import { SaveNoteDetailDTO } from "src/controllers/note/note.dtos";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 class NoteEditorService {
-  constructor(private readonly prismaService: PrismaService ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async save(noteDTO: NoteDTO ): Promise<void> {
+  async save(noteDTO: SaveNoteDetailDTO): Promise<void> {
     const { writerId, id, ...note } = noteDTO;
 
     await this.prismaService.$transaction(async (tx) => {
@@ -17,13 +18,14 @@ class NoteEditorService {
         update: note,
         create: {
           ...note,
-          writerId,
+          radius: 1,
+          writer: {
+            connect: {
+              id: writerId,
+            },
+          },
         },
       });
-
-      if (!noteDTO.isChecked) {
-        return;
-      }
 
       await tx.locker.update({
         where: { ownerId: writerId },
@@ -35,9 +37,6 @@ class NoteEditorService {
       });
     });
   }
-
-
 }
 
 export default NoteEditorService;
-

@@ -5,7 +5,7 @@ import NoteRepository from "src/repositories/Note.repository";
 import NoteViewerService from "src/services/NoteViewer.service";
 import NoteEditorService from "src/services/NoteEditor.service";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { GetNoteDTO, GetNoteDetailDTO } from "./note.dtos";
+import { SaveNoteDetailDTO, GetNoteDTO, GetNoteDetailDTO } from "./note.dtos";
 import { plainToInstance } from "class-transformer";
 
 @Controller("note")
@@ -38,7 +38,7 @@ class NoteController {
   }
 
   @Post()
-  createNotes(@Body() noteDTO: NoteDTO): Promise<void> {
+  createNotes(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
     return this.noteEditorService.save(noteDTO);
   }
 
@@ -46,6 +46,8 @@ class NoteController {
   replaceNote (@Body() noteDTO: NoteDTO): Promise<void> {
     return this.noteEditorService.save(noteDTO);
   }
+
+
 }
 
 export default NoteController;

@@ -2,16 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { GetNoteDetailDTO } from "src/controllers/note/note.dtos"
+import { GetNoteDetailDTO } from "src/controllers/note/note.dtos";
 
 @Injectable()
 class NoteViewerService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async detail({
-    noteId,
-    memberId,
-  }: GetNoteDetailDTO): Promise<NoteDTO> {
+  async detail({ noteId, memberId }: GetNoteDetailDTO): Promise<NoteDTO> {
     const note = await this.prismaService.note.findUniqueOrThrow({
       where: {
         id: noteId,

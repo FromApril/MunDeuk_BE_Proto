@@ -28,3 +28,29 @@ export class GetNoteDetailDTO {
   noteId: bigint;
 }
 
+export class SaveNoteDetailDTO {
+  @ApiProperty({
+    type: String,
+  })
+  content: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  latitude: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  longitude: number;
+
+  @ApiProperty({
+    type: BigInt,
+  })
+  id: bigint;
+
+  @ApiProperty({
+    type: BigInt,
+  })
+  writerId: bigint;
+}
