@@ -33,14 +33,6 @@ export function parseError(error: unknown): ErrorObj {
     stack = error.stack;
   }
 
-  if (
-    typeof error === "object" &&
-    "status" in error &&
-    typeof error.status === "number"
-  ) {
-    status = error.status;
-  }
-
   console.error(`[ERROR]: ${message} | ${stack}`);
 
   return {
