@@ -49,6 +49,7 @@ jobs:
         uses: 'docker/build-push-action@v4'
         with:
           context: '.'
+          file: './docker/Dockerfile'
           push: 'true'
           tags: 'asia-northeast3-docker.pkg.dev/fromapril/mundeuk_be_proto:latest'
           cache-from: 'type=gha'
