@@ -35,7 +35,6 @@ model Note {
   content   String?
   latitude  Float
   longitude Float
-  radius    Int
 
   isDeleted Boolean @default(false)
   viewCount Int     @default(0)
@@ -43,6 +42,9 @@ model Note {
 
   writerId BigInt?
   writer   Member? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  ownerId BigInt?
+  originId BigInt?
 
   savedNotes SavedNote[]
 }

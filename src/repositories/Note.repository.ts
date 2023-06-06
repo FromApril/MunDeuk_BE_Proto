@@ -3,6 +3,7 @@ import { plainToInstance } from "class-transformer";
 import { Note, Prisma } from "@prisma/client";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { SaveNoteDetailDTO } from "src/controllers/note/note.dtos";
 
 @Injectable()
 class NoteRepository {
@@ -52,6 +53,26 @@ class NoteRepository {
       where: { id: noteId },
       data: {
         isDeleted: true,
+      },
+    });
+  }
+
+  async save(noteDTO: SaveNoteDetailDTO): Promise<Note> {
+    const { writerId, id, ...note } = noteDTO;
+
+    return await this.prismaService.note.upsert({
+      where: {
+        id,
+      },
+      update: note,
+      create: {
+        ...note,
+        radius: 1,
+        writer: {
+          connect: {
+            id: writerId,
+          },
+        },
       },
     });
   }

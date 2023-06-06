@@ -57,13 +57,13 @@ class NoteController {
   }
 
   @Post()
-  createNotes(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
-    return this.noteEditorService.save(noteDTO);
+  async createNotes(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
+    await this.noteRepository.save(noteDTO);
   }
 
   @Put()
-  replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
-    return this.noteEditorService.save(noteDTO);
+  async replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
+    await this.noteRepository.save(noteDTO);
   }
 
   @Delete()

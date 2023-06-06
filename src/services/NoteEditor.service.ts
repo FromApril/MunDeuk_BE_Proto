@@ -17,32 +17,20 @@ class NoteEditorService {
   async save(noteDTO: SaveNoteDetailDTO): Promise<void> {
     const { writerId, id, ...note } = noteDTO;
 
-    await this.prismaService.$transaction(async (tx) => {
-      // @TODO: 잘못 삭제 위험
-      const upsertedNote = await tx.note.upsert({
-        where: {
-          id,
-        },
-        update: note,
-        create: {
-          ...note,
-          radius: 1,
-          writer: {
-            connect: {
-              id: writerId,
-            },
+    await this.prismaService.note.upsert({
+      where: {
+        id,
+      },
+      update: note,
+      create: {
+        ...note,
+        radius: 1,
+        writer: {
+          connect: {
+            id: writerId,
           },
         },
-      });
-
-      await tx.locker.update({
-        where: { ownerId: writerId },
-        data: {
-          viewedNoteIdList: {
-            push: upsertedNote.id,
-          },
-        },
-      });
+      },
     });
   }
 
