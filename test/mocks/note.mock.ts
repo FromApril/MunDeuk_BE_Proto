@@ -16,7 +16,6 @@ export function generateNote(
       max: 11,
       min: 10,
     }),
-    radius: faker.number.int({ min: 1, max: 2 }),
     isDeleted: false,
     ...model,
   };

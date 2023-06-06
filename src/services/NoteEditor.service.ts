@@ -24,7 +24,6 @@ class NoteEditorService {
       update: note,
       create: {
         ...note,
-        radius: 1,
         writer: {
           connect: {
             id: writerId,
