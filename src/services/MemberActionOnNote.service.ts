@@ -4,17 +4,19 @@ import { Prisma, SavedNoteState } from "@prisma/client";
 import MemberRepository from "../../dist/repositories/Member.repository";
 import NoteRepository from "src/repositories/Note.repository";
 import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
+import SavedNoteRepository from "src/repositories/SavedNote.repository";
 
 class MemberActionOnNoteService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly memberRepository: MemberRepository,
     private readonly noteRepository: NoteRepository,
+    private readonly savedNoteRepository: SavedNoteRepository,
   ) {}
 
   // 좋아요
-  async like({ memberId, noteId, like }: LikeNoteDTO) {
-    const { lockerId } = await this.memberRepository.getLockerId(memberId);
+  async like({ viewerId, noteId, like }: LikeNoteDTO) {
+    const { lockerId } = await this.memberRepository.getLockerId(viewerId);
 
     let savedNoteState: SavedNoteState = SavedNoteState.LIKE;
     let updateLikeCountQuery = this.noteRepository.likeQuery(noteId);
@@ -26,7 +28,7 @@ class MemberActionOnNoteService {
 
     await this.prismaService.$transaction([
       this.prismaService.savedNote.upsert(
-        this.saveToLikedNoteQuery({
+        this.savedNoteRepository.upsertQuery({
           lockerId,
           noteId,
           savedNoteState,
@@ -37,8 +39,8 @@ class MemberActionOnNoteService {
   }
 
   // 신고
-  async report({ memberId, noteId }: NoteIdentityDTO) {
-    const { lockerId } = await this.memberRepository.getLockerId(memberId);
+  async report({ viewerId, noteId }: NoteIdentityDTO) {
+    const { lockerId } = await this.memberRepository.getLockerId(viewerId);
 
     this.prismaService.savedNote.create({
       data: {
@@ -47,35 +49,6 @@ class MemberActionOnNoteService {
         status: SavedNoteState.REPORTED,
       },
     });
-  }
-
-  // 숨기기
-
-  private saveToLikedNoteQuery({
-    lockerId,
-    noteId,
-    savedNoteState,
-  }: {
-    lockerId: bigint;
-    noteId: bigint;
-    savedNoteState: SavedNoteState;
-  }): Prisma.SavedNoteUpsertArgs {
-    return {
-      where: {
-        lockerId_noteId: {
-          lockerId,
-          noteId,
-        },
-      },
-      update: {
-        status: savedNoteState,
-      },
-      create: {
-        status: savedNoteState,
-        lockerId,
-        noteId,
-      },
-    };
   }
 }
 

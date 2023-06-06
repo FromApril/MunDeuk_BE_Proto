@@ -1,5 +1,5 @@
 class NoteIdentityDTO {
-  memberId: bigint;
+  viewerId: bigint;
   noteId: bigint;
 }
 
