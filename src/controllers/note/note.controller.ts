@@ -1,11 +1,25 @@
-import { Body, Controller, Get, Put, Post, Query, Param } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Put,
+  Post,
+  Query,
+  Param,
+  Delete,
+} from "@nestjs/common";
 import LocationDTO from "src/dtos/Location.dto";
 import NoteDTO from "src/dtos/Note.dto";
 import NoteRepository from "src/repositories/Note.repository";
 import NoteViewerService from "src/services/NoteViewer.service";
 import NoteEditorService from "src/services/NoteEditor.service";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { SaveNoteDetailDTO, GetNoteDTO, GetNoteDetailDTO } from "./note.dtos";
+import {
+  SaveNoteDetailDTO,
+  GetNoteDTO,
+  GetNoteDetailDTO,
+  DeleteNoteDTO,
+} from "./note.dtos";
 import { plainToInstance } from "class-transformer";
 
 @Controller("note")
@@ -15,7 +29,7 @@ class NoteController {
     private readonly noteRepository: NoteRepository,
     private readonly noteViewerService: NoteViewerService,
     private readonly noteEditorService: NoteEditorService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiResponse({
@@ -30,11 +44,16 @@ class NoteController {
   @ApiResponse({
     type: NoteDTO,
   })
-  getNote( @Param("noteId") noteId: number, @Query("memberId") memberId?: number): Promise<NoteDTO> {
-    return this.noteViewerService.detail(plainToInstance(GetNoteDetailDTO, {
-      noteId,
-      memberId,
-    }));
+  getNote(
+    @Param("noteId") noteId: number,
+    @Query("memberId") memberId?: number,
+  ): Promise<NoteDTO> {
+    return this.noteViewerService.detail(
+      plainToInstance(GetNoteDetailDTO, {
+        noteId,
+        memberId,
+      }),
+    );
   }
 
   @Post()
@@ -43,11 +62,14 @@ class NoteController {
   }
 
   @Put()
-  replaceNote (@Body() noteDTO: NoteDTO): Promise<void> {
+  replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
     return this.noteEditorService.save(noteDTO);
   }
 
-
+  @Delete()
+  deleteNote(@Body() noteDTO: DeleteNoteDTO): Promise<void> {
+    return this.noteEditorService.delete(noteDTO);
+  }
 }
 
 export default NoteController;

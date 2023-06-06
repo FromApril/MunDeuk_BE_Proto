@@ -46,6 +46,15 @@ class NoteRepository {
       return noteList.map((note) => plainToInstance(NoteDTO, note));
     });
   }
+
+  async softDelete(noteId: bigint) {
+    await this.prismaService.note.update({
+      where: { id: noteId },
+      data: {
+        isDeleted: true,
+      },
+    });
+  }
 }
 
 export default NoteRepository;
