@@ -12,6 +12,29 @@ export class GetNoteDTO extends LocationDTO {
   memberId?: bigint;
 }
 
+export class GetNoteWithLocationDTO extends LocationDTO {
+  @ApiPropertyOptional({
+    description: "조회하는 맴버의 아이디",
+    type: BigInt,
+  })
+  @Type(() => BigInt)
+  memberId?: bigint;
+
+  @ApiPropertyOptional({
+    description: "조회하는 맴버의 아이디",
+    type: Number,
+  })
+  @Type(() => Number)
+  radius?: number;
+
+  @ApiPropertyOptional({
+    description: "조회하는 맴버의 아이디",
+    type: Number,
+  })
+  @Type(() => Number)
+  size?: number;
+}
+
 export class GetNoteDetailDTO {
   @ApiPropertyOptional({
     description: "조회하는 맴버의 아이디",

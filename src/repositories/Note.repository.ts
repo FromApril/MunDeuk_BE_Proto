@@ -3,7 +3,10 @@ import { plainToInstance } from "class-transformer";
 import { Note, Prisma } from "@prisma/client";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { SaveNoteDetailDTO } from "src/controllers/note/note.dtos";
+import {
+  GetNoteWithLocationDTO,
+  SaveNoteDetailDTO,
+} from "src/controllers/note/note.dtos";
 
 @Injectable()
 class NoteRepository {
@@ -15,13 +18,7 @@ class NoteRepository {
     memberId,
     size = 10,
     radius = 2,
-  }: {
-    latitude: number;
-    longitude: number;
-    memberId?: bigint;
-    radius?: number;
-    size?: number;
-  }): Promise<NoteDTO[]> {
+  }: GetNoteWithLocationDTO): Promise<NoteDTO[]> {
     return await this.prismaService.$transaction(async (tx) => {
       let viewNoteIdList: BigInt[] = [BigInt(0)];
 
@@ -41,6 +38,7 @@ class NoteRepository {
           .map((x) => x.toString())
           .join(", ")})
           and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1000)
+          and "isDeleted" = false
         limit ${size}
       `;
 
