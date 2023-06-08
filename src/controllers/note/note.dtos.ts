@@ -65,7 +65,7 @@ export class SaveNoteDetailDTO {
   })
   writerId: bigint;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: BigInt,
   })
   id?: bigint;
