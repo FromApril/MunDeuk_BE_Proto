@@ -78,7 +78,7 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v1'
         with:
-          service: 'ns-viral-point-server'
+          service: 'mundeuk-be-proto'
           region: 'asia-northeast3'
           image: 'asia-northeast3-docker.pkg.dev/mundeuk/mundeuk-be-proto/latest'
 
