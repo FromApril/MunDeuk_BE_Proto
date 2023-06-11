@@ -8,6 +8,7 @@ import { generateNote } from "test/mocks/note.mock";
 import { ServiceModule } from "../../src/services/service.module";
 import MemberRepository from "src/repositories/Member.repository";
 import LockerService from "src/services/Locker.service";
+import { generateLocation } from "test/mocks/location.mock";
 
 describe("보관함 액션", () => {
   let lockerService: LockerService;
@@ -23,8 +24,8 @@ describe("보관함 액션", () => {
     }).compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
-    lockerService = module.get<LockerService>(LockerService);
     memberRepository = module.get<MemberRepository>(MemberRepository);
+    lockerService = module.get<LockerService>(LockerService);
 
     member = await prismaService.member.create({
       data: {
@@ -61,12 +62,12 @@ describe("보관함 액션", () => {
     const viewerId = viewer.id;
     const noteId = notes[0].id;
 
+    const { lockerId } = await memberRepository.getLockerId(viewerId);
     await lockerService.subscribe({
       viewerId,
       noteId,
     });
 
-    const { lockerId } = await memberRepository.getLockerId(viewerId);
     let foundNote = await prismaService.savedNote.findUnique({
       where: {
         lockerId_noteId: {
@@ -95,5 +96,30 @@ describe("보관함 액션", () => {
 
     expect(foundNote).toBeDefined();
     expect(foundNote.status).toBe(SavedNoteState.UN_SUBSCRIBE);
+  });
+
+  it("보관함에서 떤지기!", async () => {
+    const viewerId = viewer.id;
+    const { id: noteId, content: noteContent } = notes[1];
+    const location = generateLocation();
+
+    await lockerService.rethrow({
+      identity: {
+        noteId,
+        viewerId,
+      },
+      location,
+    });
+
+    const foundNote = await prismaService.note.findFirst({
+      where: {
+        longitude: location.longitude,
+        latitude: location.latitude,
+        writerId: viewerId,
+      },
+    });
+
+    expect(foundNote).toBeDefined();
+    expect(foundNote.content).toBe(noteContent);
   });
 });
