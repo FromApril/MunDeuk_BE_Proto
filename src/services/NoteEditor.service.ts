@@ -19,7 +19,7 @@ class NoteEditorService {
 
     await this.prismaService.note.upsert({
       where: {
-        id,
+        id: id ?? BigInt(0),
       },
       update: note,
       create: {
