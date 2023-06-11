@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import {
   DeleteNoteDTO,
   SaveNoteDetailDTO,
@@ -10,7 +10,9 @@ import NoteRepository from "src/repositories/Note.repository";
 @Injectable()
 class NoteEditorService {
   constructor(
+    @Inject(PrismaService)
     private readonly prismaService: PrismaService,
+    @Inject(NoteRepository)
     private readonly noteRepository: NoteRepository,
   ) {}
 

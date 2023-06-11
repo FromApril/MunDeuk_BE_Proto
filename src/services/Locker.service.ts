@@ -6,12 +6,17 @@ import { SavedNoteState } from "@prisma/client";
 import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
 import RethrowDTO from "src/dtos/Rethrow.dto";
 import NoteRepository from "src/repositories/Note.repository";
+import { Inject } from "@nestjs/common";
 
 class LockerService {
   constructor(
+    @Inject(PrismaService)
     private readonly prismaService: PrismaService,
+    @Inject(NoteRepository)
     private readonly noteRepository: NoteRepository,
+    @Inject(MemberRepository)
     private readonly memberRepository: MemberRepository,
+    @Inject(SavedNoteRepository)
     private readonly savedNoteRepository: SavedNoteRepository,
   ) {}
 
