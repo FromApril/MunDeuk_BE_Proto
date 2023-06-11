@@ -6,11 +6,11 @@ import { RepositoryModule } from "src/repositories/repository.module";
 import { generateMember } from "test/mocks/member.mock";
 import { generateNote } from "test/mocks/note.mock";
 import { ServiceModule } from "../../src/services/service.module";
-import MemberActionOnNoteService from "../../src/services/MemberActionOnNote.service";
 import MemberRepository from "src/repositories/Member.repository";
+import LockerService from "src/services/Locker.service";
 
-describe("맴버 액션", () => {
-  let memberActionOnNoteService: MemberActionOnNoteService;
+describe("보관함 액션", () => {
+  let lockerService: LockerService;
   let prismaService: PrismaService;
   let memberRepository: MemberRepository;
   let member: Member;
@@ -23,10 +23,9 @@ describe("맴버 액션", () => {
     }).compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
-    memberActionOnNoteService = module.get<MemberActionOnNoteService>(
-      MemberActionOnNoteService,
-    );
+    lockerService = module.get<LockerService>(LockerService);
     memberRepository = module.get<MemberRepository>(MemberRepository);
+
     member = await prismaService.member.create({
       data: {
         ...generateMember(),
@@ -58,34 +57,17 @@ describe("맴버 액션", () => {
     });
   });
 
-  it("좋아요!", async () => {
-    expect(notes[0].likeCount).toBe(0);
-    await memberActionOnNoteService.like({
-      viewerId: viewer.id,
-      noteId: notes[0].id,
-      like: true,
-    });
-
-    const foundNote = await prismaService.note.findUnique({
-      where: {
-        id: notes[0].id,
-      },
-    });
-
-    expect(foundNote).toBeDefined();
-    expect(foundNote.likeCount).toBe(1);
-  });
-
-  it("쪽지 신고!", async () => {
-    const noteId = notes[1].id;
+  it("보관함에 담기!", async () => {
     const viewerId = viewer.id;
-    await memberActionOnNoteService.report({
+    const noteId = notes[0].id;
+
+    await lockerService.subscribe({
       viewerId,
       noteId,
     });
 
     const { lockerId } = await memberRepository.getLockerId(viewerId);
-    const foundNote = await prismaService.savedNote.findUnique({
+    let foundNote = await prismaService.savedNote.findUnique({
       where: {
         lockerId_noteId: {
           lockerId,
@@ -95,6 +77,23 @@ describe("맴버 액션", () => {
     });
 
     expect(foundNote).toBeDefined();
-    expect(foundNote?.status).toBe(SavedNoteState.REPORTED);
+    expect(foundNote.status).toBe(SavedNoteState.SUBSCRIBE);
+
+    await lockerService.unsubscribe({
+      viewerId,
+      noteId,
+    });
+
+    foundNote = await prismaService.savedNote.findUnique({
+      where: {
+        lockerId_noteId: {
+          lockerId,
+          noteId,
+        },
+      },
+    });
+
+    expect(foundNote).toBeDefined();
+    expect(foundNote.status).toBe(SavedNoteState.UN_SUBSCRIBE);
   });
 });

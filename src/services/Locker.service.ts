@@ -15,7 +15,7 @@ class LockerService {
     private readonly savedNoteRepository: SavedNoteRepository,
   ) {}
 
-  subscribe({ viewerId, noteId }: NoteIdentityDTO) {
+  async subscribe({ viewerId, noteId }: NoteIdentityDTO) {
     return this.updateSubscription({
       viewerId,
       noteId,
