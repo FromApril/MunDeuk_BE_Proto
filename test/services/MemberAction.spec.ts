@@ -1,5 +1,5 @@
 import { TestingModule, Test } from "@nestjs/testing";
-import { Member, Note } from "@prisma/client";
+import { Member, Note, SavedNoteState } from "@prisma/client";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import NoteRepository from "src/repositories/Note.repository";
@@ -13,12 +13,14 @@ import MemberActionOnNoteService from "../../src/services/MemberActionOnNote.ser
 import LockerService from "src/services/Locker.service";
 import { plainToInstance } from "class-transformer";
 import { SaveNoteDetailDTO } from "src/controllers/note/note.dtos";
+import { Post } from "@nestjs/common";
+import MemberRepository from "src/repositories/Member.repository";
 
-describe("쪽지 편집", () => {
-  let noteEditorService: NoteEditorService;
+describe("맴버 액션", () => {
   let memberActionOnNoteService: MemberActionOnNoteService;
   let prismaService: PrismaService;
   let lockerService: LockerService;
+  let memberRepository: MemberRepository;
   let member: Member;
   let notes: Note[];
   let viewer: Member;
@@ -29,12 +31,10 @@ describe("쪽지 편집", () => {
     }).compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
-    noteEditorService = module.get<NoteEditorService>(NoteEditorService);
     memberActionOnNoteService = module.get<MemberActionOnNoteService>(
       MemberActionOnNoteService,
     );
-    lockerService = module.get<LockerService>(LockerService);
-
+    memberRepository = module.get<MemberRepository>(MemberRepository);
     member = await prismaService.member.create({
       data: {
         ...generateMember(),
@@ -54,7 +54,7 @@ describe("쪽지 편집", () => {
     });
 
     await prismaService.note.createMany({
-      data: Array.from({ length: 10 }).map(() =>
+      data: Array.from({ length: 2 }).map(() =>
         generateNote({ writerId: member.id }),
       ),
     });
@@ -66,45 +66,12 @@ describe("쪽지 편집", () => {
     });
   });
 
-  it("쪽지 업데이트 가능!", async () => {
-    const note = notes[0];
-    note.content = `${note.content} hello world`;
-
-    await noteEditorService.save(note);
-
-    const foundNote = await prismaService.note.findUnique({
-      where: {
-        id: note.id,
-      },
-    });
-
-    expect(foundNote.content).toBe(note.content);
-  });
-
-  it("쪽지 생성 가능!", async () => {
-    const newNote = plainToInstance(
-      SaveNoteDetailDTO,
-      generateNote({ writerId: member.id }),
-    );
-
-    await noteEditorService.save(newNote);
-
-    const foundNote = await prismaService.note.findFirst({
-      where: {
-        writerId: member.id,
-        latitude: newNote.latitude,
-        longitude: newNote.longitude,
-      },
-    });
-
-    expect(foundNote).toBeDefined();
-    expect(foundNote.content).toBe(newNote.content);
-  });
-
-  it("쪽지 삭제 가능!", async () => {
-    await noteEditorService.delete({
-      memberId: member.id,
+  it("좋아요!", async () => {
+    expect(notes[0].likeCount).toBe(0);
+    await memberActionOnNoteService.like({
+      viewerId: viewer.id,
       noteId: notes[0].id,
+      like: true,
     });
 
     const foundNote = await prismaService.note.findUnique({
@@ -113,6 +80,29 @@ describe("쪽지 편집", () => {
       },
     });
 
-    expect(foundNote.isDeleted).toBe(true);
+    expect(foundNote).toBeDefined();
+    expect(foundNote.likeCount).toBe(1);
+  });
+
+  it("쪽지 신고!", async () => {
+    const noteId = notes[1].id;
+    const viewerId = viewer.id;
+    await memberActionOnNoteService.report({
+      viewerId,
+      noteId,
+    });
+
+    const { lockerId } = await memberRepository.getLockerId(viewerId);
+    const foundNote = await prismaService.savedNote.findUnique({
+      where: {
+        lockerId_noteId: {
+          lockerId,
+          noteId,
+        },
+      },
+    });
+
+    expect(foundNote).toBeDefined();
+    expect(foundNote?.status).toBe(SavedNoteState.REPORTED);
   });
 });
