@@ -4,12 +4,17 @@ import {
   ApiResponse,
   ApiResponseProperty,
 } from "@nestjs/swagger";
-import { Note } from "@prisma/client";
+import { Note, NoteState } from "@prisma/client";
 import { Exclude, Expose, Type } from "class-transformer";
 import Noticeable from "src/interfaces/Noticeable.interface";
 
 @Exclude()
 class NoteDTO extends Noticeable implements Note {
+  @Expose()
+  @ApiPropertyOptional({
+    enum: NoteState,
+  })
+  noteState: NoteState;
   @Expose()
   @ApiPropertyOptional({
     type: Date,
@@ -27,13 +32,6 @@ class NoteDTO extends Noticeable implements Note {
     type: String,
   })
   content: string;
-
-  @Expose()
-  @ApiProperty({
-    type: Boolean,
-  })
-  isDeleted: boolean;
-
   @Expose()
   @ApiProperty({
     type: Number,

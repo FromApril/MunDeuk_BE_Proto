@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { NoteState, Prisma } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 export function generateNote(
@@ -16,7 +16,7 @@ export function generateNote(
       max: 11,
       min: 10,
     }),
-    isDeleted: false,
+    noteState: NoteState.ACTIVE,
     ...model,
   };
 }

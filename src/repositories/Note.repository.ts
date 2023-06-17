@@ -3,6 +3,7 @@ import { plainToInstance } from "class-transformer";
 import { Note, Prisma } from "@prisma/client";
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { NoteState } from "@prisma/client";
 import {
   GetNoteWithLocationDTO,
   SaveNoteDetailDTO,
@@ -38,7 +39,7 @@ class NoteRepository {
           .map((x) => x.toString())
           .join(", ")})
           and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1000)
-          and "isDeleted" = false
+          and "noteState" = 'ACTIVE'
         limit ${size}
       `;
 
@@ -50,7 +51,7 @@ class NoteRepository {
     await this.prismaService.note.update({
       where: { id: noteId },
       data: {
-        isDeleted: true,
+        noteState: NoteState.DELETED,
       },
     });
   }

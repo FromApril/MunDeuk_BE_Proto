@@ -1,5 +1,5 @@
 import { TestingModule, Test } from "@nestjs/testing";
-import { Member, Note } from "@prisma/client";
+import { Member, Note, NoteState } from "@prisma/client";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import NoteRepository from "src/repositories/Note.repository";
@@ -113,6 +113,6 @@ describe("쪽지 편집", () => {
       },
     });
 
-    expect(foundNote.isDeleted).toBe(true);
+    expect(foundNote.noteState).toBe(NoteState.DELETED);
   });
 });
