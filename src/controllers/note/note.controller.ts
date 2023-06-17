@@ -8,6 +8,8 @@ import {
   Param,
   Delete,
   Patch,
+  UseInterceptors,
+  UploadedFiles,
 } from "@nestjs/common";
 import LocationDTO from "src/dtos/Location.dto";
 import NoteDTO from "src/dtos/Note.dto";
@@ -27,6 +29,8 @@ import MemberActionOnNoteService from "../../services/MemberActionOnNote.service
 import NoteIdentityDTO from "src/dtos/NoteIdentity.dto";
 import LockerService from "src/services/Locker.service";
 import RethrowDTO from "src/dtos/Rethrow.dto";
+import { FilesInterceptor } from "@nestjs/platform-express";
+import { UploadService } from "src/upload/upload.service";
 
 @Controller("note")
 @ApiTags("note")
@@ -37,7 +41,30 @@ class NoteController {
     private readonly noteEditorService: NoteEditorService,
     private readonly lockerService: LockerService,
     private readonly memberActionOnNoteService: MemberActionOnNoteService,
+    private readonly uploadService: UploadService,
   ) {}
+
+  @Post("image")
+  @UseInterceptors(
+    FilesInterceptor("files", 3, {
+      limits: {
+        fileSize: 1024 * 1024 * 2,
+      },
+    }),
+  )
+  async uploadFile(@UploadedFiles() files) {
+    const imgurls: string[] = [];
+
+    await Promise.all(
+      files.map(async (file) => {
+        const { data, error } = await this.uploadService.uploadImage({ file });
+        console.log(error);
+        imgurls.push(data.path);
+      }),
+    );
+
+    return imgurls;
+  }
 
   @Get()
   @ApiResponse({

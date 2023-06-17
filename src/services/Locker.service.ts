@@ -57,7 +57,7 @@ class LockerService {
       writerId: viewerId,
       longitude,
       latitude,
-      content,
+      content: JSON.stringify(content),
       ownerId: ownerId ?? writerId,
       originId: originId ?? noteId,
     });

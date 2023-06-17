@@ -38,7 +38,7 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  content   String?
+  content   Json?
   latitude  Float
   longitude Float
 

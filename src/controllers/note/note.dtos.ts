@@ -69,7 +69,7 @@ export class DeleteNoteDTO {
 
 export class SaveNoteDetailDTO {
   @ApiProperty({
-    type: String,
+    type: JSON,
   })
   content: string;
 

@@ -29,9 +29,10 @@ class NoteDTO extends Noticeable implements Note {
 
   @Expose()
   @ApiProperty({
-    type: String,
+    type: JSON,
   })
   content: string;
+
   @Expose()
   @ApiProperty({
     type: Number,
