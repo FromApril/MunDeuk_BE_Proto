@@ -70,7 +70,7 @@ describe("쪽지 편집", () => {
     const note = notes[0];
     note.content = `${note.content} hello world`;
 
-    await noteEditorService.save(note);
+    await noteEditorService.save(note as any);
 
     const foundNote = await prismaService.note.findUnique({
       where: {

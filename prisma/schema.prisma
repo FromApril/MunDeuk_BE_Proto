@@ -38,6 +38,8 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  imageUrls String[] @default([])
+
   content   Json?
   latitude  Float
   longitude Float

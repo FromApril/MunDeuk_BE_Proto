@@ -11,10 +11,18 @@ import Noticeable from "src/interfaces/Noticeable.interface";
 @Exclude()
 class NoteDTO extends Noticeable implements Note {
   @Expose()
+  @ApiProperty({
+    type: String,
+    isArray: true,
+  })
+  imageUrls: string[];
+
+  @Expose()
   @ApiPropertyOptional({
     enum: NoteState,
   })
   noteState: NoteState;
+
   @Expose()
   @ApiPropertyOptional({
     type: Date,

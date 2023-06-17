@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import LocationDTO from "../../dtos/Location.dto";
-import { Note } from "@prisma/client";
 
 export class GetNoteDTO extends LocationDTO {
   @ApiPropertyOptional({
@@ -67,11 +66,17 @@ export class DeleteNoteDTO {
   noteId: bigint;
 }
 
-export class SaveNoteDetailDTO {
+export class CreateNoteDetailDTO {
   @ApiProperty({
     type: JSON,
   })
   content: string;
+
+  @ApiProperty({
+    type: String,
+    isArray: true,
+  })
+  imageUrls: string[];
 
   @ApiProperty({
     type: Number,
@@ -87,7 +92,9 @@ export class SaveNoteDetailDTO {
     type: BigInt,
   })
   writerId: bigint;
+}
 
+export class SaveNoteDetailDTO extends CreateNoteDetailDTO {
   @ApiPropertyOptional({
     type: BigInt,
   })

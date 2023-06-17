@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import {
   DeleteNoteDTO,
   SaveNoteDetailDTO,
@@ -17,15 +18,19 @@ class NoteEditorService {
   ) {}
 
   async save(noteDTO: SaveNoteDetailDTO): Promise<void> {
-    const { writerId, id, ...note } = noteDTO;
+    const { writerId, id, content, ...note } = noteDTO;
 
     await this.prismaService.note.upsert({
       where: {
         id: id ?? BigInt(0),
       },
-      update: note,
+      update: {
+        ...note,
+        content: content as Prisma.JsonValue,
+      },
       create: {
         ...note,
+        content: content as Prisma.JsonValue,
         writer: {
           connect: {
             id: writerId,

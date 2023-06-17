@@ -22,6 +22,7 @@ import {
   GetNoteDTO,
   GetNoteDetailDTO,
   DeleteNoteDTO,
+  CreateNoteDetailDTO,
 } from "./note.dtos";
 import { plainToInstance } from "class-transformer";
 import LikeNoteDTO from "src/dtos/LikeNote.dto";
@@ -92,7 +93,7 @@ class NoteController {
   }
 
   @Post()
-  async createNotes(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
+  async createNotes(@Body() noteDTO: CreateNoteDetailDTO): Promise<void> {
     await this.noteRepository.save(noteDTO);
   }
 
@@ -112,7 +113,7 @@ class NoteController {
   }
 
   @Put()
-  async replaceNote(@Body() noteDTO: NoteDTO): Promise<void> {
+  async replaceNote(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
     await this.noteRepository.save(noteDTO);
   }
 
