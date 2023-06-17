@@ -16,7 +16,13 @@ import NoteDTO from "src/dtos/Note.dto";
 import NoteRepository from "src/repositories/Note.repository";
 import NoteViewerService from "src/services/NoteViewer.service";
 import NoteEditorService from "src/services/NoteEditor.service";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiProperty,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import {
   SaveNoteDetailDTO,
   GetNoteDTO,
@@ -44,28 +50,6 @@ class NoteController {
     private readonly memberActionOnNoteService: MemberActionOnNoteService,
     private readonly uploadService: UploadService,
   ) {}
-
-  @Post("image")
-  @UseInterceptors(
-    FilesInterceptor("files", 3, {
-      limits: {
-        fileSize: 1024 * 1024 * 2,
-      },
-    }),
-  )
-  async uploadFile(@UploadedFiles() files) {
-    const imgurls: string[] = [];
-
-    await Promise.all(
-      files.map(async (file) => {
-        const { data, error } = await this.uploadService.uploadImage({ file });
-        console.log(error);
-        imgurls.push(data.path);
-      }),
-    );
-
-    return imgurls;
-  }
 
   @Get()
   @ApiResponse({
@@ -95,6 +79,42 @@ class NoteController {
   @Post()
   async createNotes(@Body() noteDTO: CreateNoteDetailDTO): Promise<void> {
     await this.noteRepository.save(noteDTO);
+  }
+
+  @Post("image")
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    isArray: true,
+    schema: {
+      type: "object",
+      properties: {
+        files: {
+          maxItems: 3,
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FilesInterceptor("files", 3, {
+      limits: {
+        fileSize: 1024 * 1024 * 2,
+      },
+    }),
+  )
+  async uploadFile(@UploadedFiles() files) {
+    const imgurls: string[] = [];
+
+    await Promise.all(
+      files.map(async (file) => {
+        const { data, error } = await this.uploadService.uploadImage({ file });
+        console.log(error);
+        imgurls.push(data.path);
+      }),
+    );
+
+    return imgurls;
   }
 
   @Post("like")
