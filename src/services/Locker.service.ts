@@ -40,7 +40,7 @@ class LockerService {
     const { viewerId, noteId } = identity;
     const { longitude, latitude } = location;
 
-    const { content, writerId, ownerId, originId } =
+    const { content, writerId, ownerId, originId, imageUrls } =
       await this.prismaService.note.findUniqueOrThrow({
         where: {
           id: noteId,
@@ -50,6 +50,7 @@ class LockerService {
           writerId: true,
           ownerId: true,
           originId: true,
+          imageUrls: true,
         },
       });
 
@@ -60,6 +61,7 @@ class LockerService {
       content: content as any,
       ownerId: ownerId ?? writerId,
       originId: originId ?? noteId,
+      imageUrls,
     });
   }
 
