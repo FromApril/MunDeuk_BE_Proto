@@ -9,6 +9,8 @@ import { ServiceModule } from "../../src/services/service.module";
 import MemberRepository from "src/repositories/Member.repository";
 import LockerService from "src/services/Locker.service";
 import { generateLocation } from "test/mocks/location.mock";
+import { UploadService } from "src/upload/upload.service";
+import UploaderServiceMock from "test/mocks/uploader.mock";
 
 describe("보관함 액션", () => {
   let lockerService: LockerService;
@@ -21,7 +23,10 @@ describe("보관함 액션", () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RepositoryModule, ServiceModule, PrismaModule],
-    }).compile();
+    })
+      .overrideProvider(UploadService)
+      .useClass(UploaderServiceMock)
+      .compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
     memberRepository = module.get<MemberRepository>(MemberRepository);

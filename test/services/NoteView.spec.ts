@@ -8,6 +8,8 @@ import NoteViewerService from "src/services/NoteViewer.service";
 import { generateMember } from "test/mocks/member.mock";
 import { generateNote } from "test/mocks/note.mock";
 import { ServiceModule } from "../../src/services/service.module";
+import { UploadService } from "src/upload/upload.service";
+import UploaderServiceMock from "test/mocks/uploader.mock";
 
 describe("쪽지 조회 서비스", () => {
   let noteViewerService: NoteViewerService;
@@ -18,7 +20,10 @@ describe("쪽지 조회 서비스", () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RepositoryModule, ServiceModule, PrismaModule],
-    }).compile();
+    })
+      .overrideProvider(UploadService)
+      .useClass(UploaderServiceMock)
+      .compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
     noteViewerService = module.get<NoteViewerService>(NoteViewerService);

@@ -13,12 +13,12 @@ import MemberActionOnNoteService from "../../src/services/MemberActionOnNote.ser
 import LockerService from "src/services/Locker.service";
 import { plainToInstance } from "class-transformer";
 import { SaveNoteDetailDTO } from "src/controllers/note/note.dtos";
+import { UploadService } from "src/upload/upload.service";
+import UploaderServiceMock from "test/mocks/uploader.mock";
 
 describe("쪽지 편집", () => {
   let noteEditorService: NoteEditorService;
-  let memberActionOnNoteService: MemberActionOnNoteService;
   let prismaService: PrismaService;
-  let lockerService: LockerService;
   let member: Member;
   let notes: Note[];
   let viewer: Member;
@@ -26,14 +26,13 @@ describe("쪽지 편집", () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RepositoryModule, ServiceModule, PrismaModule],
-    }).compile();
+    })
+      .overrideProvider(UploadService)
+      .useClass(UploaderServiceMock)
+      .compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
     noteEditorService = module.get<NoteEditorService>(NoteEditorService);
-    memberActionOnNoteService = module.get<MemberActionOnNoteService>(
-      MemberActionOnNoteService,
-    );
-    lockerService = module.get<LockerService>(LockerService);
 
     member = await prismaService.member.create({
       data: {

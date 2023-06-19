@@ -8,6 +8,8 @@ import { generateNote } from "test/mocks/note.mock";
 import { ServiceModule } from "../../src/services/service.module";
 import MemberActionOnNoteService from "../../src/services/MemberActionOnNote.service";
 import MemberRepository from "src/repositories/Member.repository";
+import { UploadService } from "src/upload/upload.service";
+import UploaderServiceMock from "test/mocks/uploader.mock";
 
 describe("맴버 액션", () => {
   let memberActionOnNoteService: MemberActionOnNoteService;
@@ -20,7 +22,10 @@ describe("맴버 액션", () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RepositoryModule, ServiceModule, PrismaModule],
-    }).compile();
+    })
+      .overrideProvider(UploadService)
+      .useClass(UploaderServiceMock)
+      .compile();
 
     prismaService = module.get<PrismaService>(PrismaService);
     memberActionOnNoteService = module.get<MemberActionOnNoteService>(

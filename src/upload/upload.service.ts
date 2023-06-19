@@ -1,9 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import { IUploadImageResponse, IUploadService } from "./upload.interface";
 
 @Injectable()
-export class UploadService {
+export class UploadService implements IUploadService {
   private clientInstance: SupabaseClient;
 
   constructor(private readonly configService: ConfigService) {
@@ -16,12 +17,10 @@ export class UploadService {
   async uploadImage({
     file,
     contentType,
-  }: { file: Buffer | string; contentType: string }): Promise<{
-    data: {
-      path: string;
-    } | null;
-    error: any;
-  }> {
+  }: {
+    file: Buffer | string;
+    contentType: string;
+  }): Promise<IUploadImageResponse> {
     const key = `${Date.now().toString()}`;
 
     const { data, error } = await this.clientInstance.storage
