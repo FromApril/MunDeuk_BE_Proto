@@ -76,7 +76,7 @@ export class CreateNoteDetailDTO {
     type: String,
     isArray: true,
   })
-  imageUrls: string[];
+  newImages: string[];
 
   @ApiProperty({
     type: Number,

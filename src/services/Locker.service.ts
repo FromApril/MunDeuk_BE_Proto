@@ -54,14 +54,19 @@ class LockerService {
         },
       });
 
-    await this.noteRepository.save({
-      writerId: viewerId,
-      longitude,
-      latitude,
-      content: content as any,
-      ownerId: ownerId ?? writerId,
-      originId: originId ?? noteId,
-      imageUrls,
+    await this.prismaService.note.update({
+      where: {
+        id: noteId,
+      },
+      data: {
+        writerId: viewerId,
+        longitude,
+        latitude,
+        content: content,
+        ownerId: ownerId ?? writerId,
+        originId: originId ?? noteId,
+        imageUrls,
+      },
     });
   }
 

@@ -7,6 +7,7 @@ import {
 import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import NoteRepository from "src/repositories/Note.repository";
+import { UploadService } from "src/upload/upload.service";
 
 @Injectable()
 class NoteEditorService {
@@ -15,10 +16,37 @@ class NoteEditorService {
     private readonly prismaService: PrismaService,
     @Inject(NoteRepository)
     private readonly noteRepository: NoteRepository,
+    @Inject(UploadService)
+    private readonly uploadService: UploadService,
   ) {}
 
   async save(noteDTO: SaveNoteDetailDTO): Promise<void> {
-    const { writerId, id, content, ...note } = noteDTO;
+    const { writerId, id, content, newImages, ...note } = noteDTO;
+
+    const imageUrls = [];
+
+    if (Array.isArray(newImages)) {
+      const uploadedUrlImages = await Promise.allSettled(
+        newImages.map((imageString: string) => {
+          const base64Data = Buffer.from(
+            imageString.replace(/^data:image\/\w+;base64,/, ""),
+            "base64",
+          );
+          const type = imageString.split(";")[0].split("/")[1];
+
+          return this.uploadService.uploadImage({
+            file: base64Data,
+            contentType: `image/${type}`,
+          });
+        }),
+      );
+
+      uploadedUrlImages.forEach((result) => {
+        if (result.status === "fulfilled") {
+          newImages.push(result.value.data?.path);
+        }
+      });
+    }
 
     await this.prismaService.note.upsert({
       where: {
@@ -27,10 +55,12 @@ class NoteEditorService {
       update: {
         ...note,
         content: content as Prisma.JsonValue,
+        imageUrls,
       },
       create: {
         ...note,
         content: content as Prisma.JsonValue,
+        imageUrls,
         writer: {
           connect: {
             id: writerId,

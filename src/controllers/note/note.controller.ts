@@ -78,7 +78,7 @@ class NoteController {
 
   @Post()
   async createNotes(@Body() noteDTO: CreateNoteDetailDTO): Promise<void> {
-    await this.noteRepository.save(noteDTO);
+    await this.noteEditorService.save(noteDTO);
   }
 
   @Post("image")
@@ -103,12 +103,15 @@ class NoteController {
       },
     }),
   )
-  async uploadFile(@UploadedFiles() files) {
+  async uploadFile(@UploadedFiles() files: Express.Multer.File[]) {
     const imgurls: string[] = [];
 
     await Promise.all(
       files.map(async (file) => {
-        const { data, error } = await this.uploadService.uploadImage({ file });
+        const { data, error } = await this.uploadService.uploadImage({
+          file: file.buffer,
+          contentType: file.mimetype,
+        });
         console.log(error);
         imgurls.push(data.path);
       }),
@@ -134,7 +137,7 @@ class NoteController {
 
   @Put()
   async replaceNote(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
-    await this.noteRepository.save(noteDTO);
+    await this.noteEditorService.save(noteDTO);
   }
 
   @Patch("subscribe")

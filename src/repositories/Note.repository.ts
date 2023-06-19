@@ -56,25 +56,6 @@ class NoteRepository {
     });
   }
 
-  async save(noteDTO: SaveNoteDetailDTO): Promise<Note> {
-    const { writerId, id, ...note } = noteDTO;
-
-    return await this.prismaService.note.upsert({
-      where: {
-        id: id ?? BigInt(0),
-      },
-      update: note,
-      create: {
-        ...note,
-        writer: {
-          connect: {
-            id: writerId,
-          },
-        },
-      },
-    });
-  }
-
   likeQuery(noteId: bigint): Prisma.NoteUpdateArgs {
     return {
       where: { id: noteId },

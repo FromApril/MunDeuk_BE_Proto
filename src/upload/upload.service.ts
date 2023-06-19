@@ -13,7 +13,10 @@ export class UploadService {
     );
   }
 
-  async uploadImage({ file }: { file: Express.Multer.File }): Promise<{
+  async uploadImage({
+    file,
+    contentType,
+  }: { file: Buffer | string; contentType: string }): Promise<{
     data: {
       path: string;
     } | null;
@@ -23,8 +26,9 @@ export class UploadService {
 
     const { data, error } = await this.clientInstance.storage
       .from("template")
-      .upload(`public/${key}`, file.buffer, {
+      .upload(`public/${key}`, file, {
         cacheControl: "3600",
+        contentType,
         upsert: true,
       });
 
