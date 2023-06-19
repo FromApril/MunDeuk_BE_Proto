@@ -18,7 +18,7 @@ BigInt.prototype.toJSON = function () {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const httpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new DefaultExceptionFilter(httpAdapterHost));
