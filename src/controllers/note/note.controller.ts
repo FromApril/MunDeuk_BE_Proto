@@ -111,6 +111,7 @@ class NoteController {
         const { data, error } = await this.uploadService.uploadImage({
           file: file.buffer,
           contentType: file.mimetype,
+          fileName: file.filename,
         });
         console.log(error);
         imgurls.push(data.path);

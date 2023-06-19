@@ -17,11 +17,13 @@ export class UploadService implements IUploadService {
   async uploadImage({
     file,
     contentType,
+    fileName,
   }: {
     file: Buffer | string;
     contentType: string;
+    fileName: string;
   }): Promise<IUploadImageResponse> {
-    const key = `${Date.now().toString()}`;
+    const key = `${Date.now().toString()}${fileName}`;
 
     const { data, error } = await this.clientInstance.storage
       .from("template")

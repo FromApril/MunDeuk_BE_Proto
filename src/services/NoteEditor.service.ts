@@ -27,7 +27,7 @@ class NoteEditorService {
 
     if (Array.isArray(newImages)) {
       const uploadedUrlImages = await Promise.allSettled(
-        newImages.map((imageString: string) => {
+        newImages.map((imageString: string, index) => {
           const base64Data = Buffer.from(
             imageString.replace(/^data:image\/\w+;base64,/, ""),
             "base64",
@@ -37,6 +37,7 @@ class NoteEditorService {
           return this.uploadService.uploadImage({
             file: base64Data,
             contentType: `image/${type}`,
+            fileName: index.toString(),
           });
         }),
       );
