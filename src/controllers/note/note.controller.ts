@@ -80,6 +80,47 @@ class NoteController {
   async createNotes(@Body() noteDTO: CreateNoteDetailDTO): Promise<void> {
     await this.noteEditorService.save(noteDTO);
   }
+  @Post("withImage")
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    isArray: true,
+    schema: {
+      type: "object",
+      properties: {
+        files: {
+          maxItems: 3,
+          type: "string",
+          format: "binary",
+        },
+        content: {
+          type: "json",
+          format: "json",
+        },
+        latitude: {
+          type: "number",
+        },
+        longitude: {
+          type: "number",
+        },
+        writerId: {
+          type: "bigint",
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FilesInterceptor("files", 3, {
+      limits: {
+        fileSize: 1024 * 1024 * 1,
+      },
+    }),
+  )
+  async createNotesWithImage(
+    @Body() noteDTO: CreateNoteDetailDTO,
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<void> {
+    await this.noteEditorService.save(noteDTO, files);
+  }
 
   @Post("image")
   @ApiConsumes("multipart/form-data")
@@ -136,9 +177,46 @@ class NoteController {
     await this.memberActionOnNoteService.report(noteIdentityDTO);
   }
 
-  @Put()
-  async replaceNote(@Body() noteDTO: SaveNoteDetailDTO): Promise<void> {
-    await this.noteEditorService.save(noteDTO);
+  @Put("withImage")
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    isArray: true,
+    schema: {
+      type: "object",
+      properties: {
+        files: {
+          maxItems: 3,
+          type: "string",
+          format: "binary",
+        },
+        content: {
+          type: "json",
+          format: "json",
+        },
+        latitude: {
+          type: "number",
+        },
+        longitude: {
+          type: "number",
+        },
+        writerId: {
+          type: "bigint",
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FilesInterceptor("files", 3, {
+      limits: {
+        fileSize: 1024 * 1024 * 1,
+      },
+    }),
+  )
+  async replaceNote(
+    @Body() noteDTO: SaveNoteDetailDTO,
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<void> {
+    await this.noteEditorService.save(noteDTO, files);
   }
 
   @Patch("subscribe")

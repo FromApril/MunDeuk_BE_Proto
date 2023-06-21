@@ -34,7 +34,9 @@ export class UploadService implements IUploadService {
       });
 
     return {
-      data,
+      data: {
+        path: `https://umchcgonkgfgjgjpedmh.supabase.co/${data?.path}`,
+      },
       error,
     };
   }

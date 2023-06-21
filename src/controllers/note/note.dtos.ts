@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import LocationDTO from "../../dtos/Location.dto";
 
 export class GetNoteDTO extends LocationDTO {
@@ -73,24 +73,21 @@ export class CreateNoteDetailDTO {
   content: string;
 
   @ApiProperty({
-    type: String,
-    isArray: true,
-  })
-  newImages: string[];
-
-  @ApiProperty({
     type: Number,
   })
+  @Type(() => Number)
   latitude: number;
 
   @ApiProperty({
     type: Number,
   })
+  @Type(() => Number)
   longitude: number;
 
   @ApiProperty({
     type: BigInt,
   })
+  @Type(() => BigInt)
   writerId: bigint;
 }
 

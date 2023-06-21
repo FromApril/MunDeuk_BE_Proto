@@ -20,38 +20,35 @@ class NoteEditorService {
     private readonly uploadService: UploadService,
   ) {}
 
-  async save(noteDTO: SaveNoteDetailDTO): Promise<void> {
-    const { writerId, id, content, newImages, ...note } = noteDTO;
+  async save(
+    noteDTO: SaveNoteDetailDTO,
+    files?: Express.Multer.File[],
+  ): Promise<void> {
+    const { writerId, id, content, ...note } = noteDTO;
 
     const imageUrls = [];
 
-    if (Array.isArray(newImages)) {
+    if (Array.isArray(files)) {
       const uploadedUrlImages = await Promise.allSettled(
-        newImages.map((imageString: string, index) => {
-          const base64Data = Buffer.from(
-            imageString.replace(/^data:image\/\w+;base64,/, ""),
-            "base64",
-          );
-          const type = imageString.split(";")[0].split("/")[1];
-
+        files.map((file, index) => {
           return this.uploadService.uploadImage({
-            file: base64Data,
-            contentType: `image/${type}`,
-            fileName: index.toString(),
+            file: file.buffer,
+            contentType: file.mimetype,
+            fileName: file.filename ?? index.toString(),
           });
         }),
       );
 
       uploadedUrlImages.forEach((result) => {
         if (result.status === "fulfilled") {
-          newImages.push(result.value.data?.path);
+          imageUrls.push(result.value.data?.path);
         }
       });
     }
 
     await this.prismaService.note.upsert({
       where: {
-        id: id ?? BigInt(0),
+        id: (id && BigInt(id)) ?? BigInt(0),
       },
       update: {
         ...note,
@@ -64,7 +61,7 @@ class NoteEditorService {
         imageUrls,
         writer: {
           connect: {
-            id: writerId,
+            id: BigInt(writerId),
           },
         },
       },
