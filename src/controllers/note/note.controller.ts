@@ -111,7 +111,7 @@ class NoteController {
   @UseInterceptors(
     FilesInterceptor("files", 3, {
       limits: {
-        fileSize: 1024 * 1024 * 1,
+        fileSize: 1024 * 1024 * 2,
       },
     }),
   )
