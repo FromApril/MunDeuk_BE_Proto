@@ -4,7 +4,6 @@ import {
   DeleteNoteDTO,
   SaveNoteDetailDTO,
 } from "src/controllers/note/note.dtos";
-import NoteDTO from "src/dtos/Note.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import NoteRepository from "src/repositories/Note.repository";
 import { UploadService } from "src/upload/upload.service";
