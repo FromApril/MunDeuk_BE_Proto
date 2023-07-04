@@ -33,9 +33,15 @@ export class UploadService implements IUploadService {
         upsert: true,
       });
 
+    const {
+      data: { publicUrl },
+    } = await this.clientInstance.storage
+      .from("template")
+      .getPublicUrl(data?.path);
+
     return {
       data: {
-        path: `https://umchcgonkgfgjgjpedmh.supabase.co/${data?.path}`,
+        path: publicUrl,
       },
       error,
     };

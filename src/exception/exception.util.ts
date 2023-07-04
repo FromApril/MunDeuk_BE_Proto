@@ -1,3 +1,5 @@
+import { HttpException } from "@nestjs/common";
+
 export const ErrorMessageEnum = {
   UNKNOWN: "서버측 에러입니다.",
   TRY_AGAIN: "현재 서버가 바쁩니다. 조금 이따 다시 시도해 주세요.",
@@ -18,15 +20,15 @@ export function parseError(error: unknown): ErrorObj {
   let stack = "";
   let status = 500;
 
-  if (error instanceof Response) {
-    if (error.status === 503) {
+  if (error instanceof HttpException) {
+    if (error.getStatus() === 503) {
       message = ErrorMessageEnum.SEARCH_ENGINE_BUSY;
       status = 429;
     } else {
-      message = error.statusText;
-      status = error.status;
+      message = error.message;
+      status = error.getStatus();
     }
-    stack = error.type;
+    stack = error.stack;
   } else if (error instanceof Error) {
     message = error.message;
     name = error.name;
