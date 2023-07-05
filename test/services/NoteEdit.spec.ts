@@ -77,7 +77,7 @@ describe("쪽지 편집", () => {
       },
     });
 
-    expect(foundNote.content).toBe(note.content);
+    expect(foundNote.content).toMatchObject(note.content);
   });
 
   it("쪽지 생성 가능!", async () => {
@@ -97,7 +97,7 @@ describe("쪽지 편집", () => {
     });
 
     expect(foundNote).toBeDefined();
-    expect(foundNote.content).toBe(newNote.content);
+    expect(foundNote.content).toMatchObject(JSON.parse(newNote.content));
   });
 
   it("쪽지 삭제 가능!", async () => {
