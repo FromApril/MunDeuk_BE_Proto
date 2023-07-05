@@ -125,6 +125,6 @@ describe("보관함 액션", () => {
     });
 
     expect(foundNote).toBeDefined();
-    expect(foundNote.content).toBe(noteContent);
+    expect(foundNote.content).toMatchObject(noteContent);
   });
 });

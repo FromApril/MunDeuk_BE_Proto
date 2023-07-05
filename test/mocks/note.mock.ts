@@ -12,12 +12,12 @@ export function generateNote(
       emotion: faker.helpers.arrayElement(emotions),
     }),
     latitude: faker.location.latitude({
-      max: 11,
-      min: 10,
+      max: 38,
+      min: 37,
     }),
     longitude: faker.location.longitude({
-      max: 11,
-      min: 10,
+      max: 127,
+      min: 126,
     }),
     noteState: NoteState.ACTIVE,
     ...model,

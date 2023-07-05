@@ -67,7 +67,7 @@ describe("쪽지 편집", () => {
 
   it("쪽지 업데이트 가능!", async () => {
     const note = notes[0];
-    note.content = `${note.content} hello world`;
+    note.content = { text: `${note.content} hello world` };
 
     await noteEditorService.save(note as any);
 

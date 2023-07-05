@@ -51,12 +51,12 @@ class NoteEditorService {
       },
       update: {
         ...note,
-        content: content as Prisma.JsonValue,
+        content: JSON.parse(content ?? "{}") as Prisma.JsonValue,
         imageUrls,
       },
       create: {
         ...note,
-        content: content as Prisma.JsonValue,
+        content: JSON.parse(content ?? "{}") as Prisma.JsonValue,
         imageUrls,
         writer: {
           connect: {
