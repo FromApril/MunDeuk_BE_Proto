@@ -7,10 +7,10 @@ export function generateNote(
   },
 ): Prisma.NoteCreateManyInput {
   return {
-    content: JSON.stringify({
+    content: {
       text: faker.lorem.paragraph(),
       emotion: faker.helpers.arrayElement(emotions),
-    }),
+    },
     latitude: faker.location.latitude({
       max: 38,
       min: 37,

@@ -67,7 +67,7 @@ describe("쪽지 편집", () => {
 
   it("쪽지 업데이트 가능!", async () => {
     const note = notes[0];
-    note.content = { text: `${note.content} hello world` };
+    note.content = JSON.stringify({ text: `${note.content} hello world` });
 
     await noteEditorService.save(note as any);
 
@@ -77,16 +77,19 @@ describe("쪽지 편집", () => {
       },
     });
 
-    expect(foundNote.content).toMatchObject(note.content);
+    expect(foundNote.content).toMatchObject(JSON.parse(note.content));
   });
 
   it("쪽지 생성 가능!", async () => {
-    const newNote = plainToInstance(
+    const { content, ...newNote } = plainToInstance(
       SaveNoteDetailDTO,
       generateNote({ writerId: member.id }),
     );
 
-    await noteEditorService.save(newNote);
+    await noteEditorService.save({
+      ...newNote,
+      content: JSON.stringify(content),
+    });
 
     const foundNote = await prismaService.note.findFirst({
       where: {
@@ -97,7 +100,7 @@ describe("쪽지 편집", () => {
     });
 
     expect(foundNote).toBeDefined();
-    expect(foundNote.content).toMatchObject(JSON.parse(newNote.content));
+    expect(foundNote.content).toMatchObject(content);
   });
 
   it("쪽지 삭제 가능!", async () => {
