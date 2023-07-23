@@ -39,7 +39,8 @@ class NoteRepository {
           .map((x) => x.toString())
           .join(", ")})
           and "noteState" = 'ACTIVE'
-        order by ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1)
+          and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 10)
+        order by ST_Distance(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}))
         limit ${size}
       `;
 
