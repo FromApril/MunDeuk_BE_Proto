@@ -38,7 +38,7 @@ class NoteRepository {
         where CAST(id as varchar) not in (${viewNoteIdList
           .map((x) => x.toString())
           .join(", ")})
-          and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1000)
+          and ST_DWithin(ST_MakePoint(longitude, latitude), ST_MakePoint(${longitude}, ${latitude}), ${radius} * 1)
           and "noteState" = 'ACTIVE'
         limit ${size}
       `;

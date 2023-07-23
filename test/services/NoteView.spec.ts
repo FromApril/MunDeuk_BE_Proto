@@ -2,7 +2,6 @@ import { TestingModule, Test } from "@nestjs/testing";
 import { Member, Note } from "@prisma/client";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { PrismaService } from "src/prisma/prisma.service";
-import NoteRepository from "src/repositories/Note.repository";
 import { RepositoryModule } from "src/repositories/repository.module";
 import NoteViewerService from "src/services/NoteViewer.service";
 import { generateMember } from "test/mocks/member.mock";
